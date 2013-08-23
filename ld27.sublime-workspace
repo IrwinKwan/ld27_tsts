@@ -1,0 +1,253 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"id",
+				"id"
+			],
+			[
+				"data",
+				"data"
+			],
+			[
+				"Invalid",
+				"InvalidBarrierFileError"
+			],
+			[
+				"r",
+				"r"
+			],
+			[
+				"titlemission",
+				"titlemission"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 67.0,
+		"selected_items":
+		[
+			[
+				"reindent",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"convert",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"convert to s",
+				"Indentation: Convert to Spaces"
+			]
+		],
+		"width": 476.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluoritelogreader/views/LogReaderView.java",
+		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluorite/visitors/CurrentMethodsVisitor.java",
+		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluoritelogreader/adapters/LogRunnerSelectionAdapter.java",
+		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluorite/listeners/SelectionListener.java",
+		"/Users/kwan/paper_projects/Winter2013IdeaGarden-Gidget/Analysis/BarriersAnalysis/data/learning-barriers-c10.tab",
+		"/Users/kwan/paper_projects/Winter2013IdeaGarden-Gidget/Analysis/BarriersAnalysis/src/split_barriers.py",
+		"/Users/kwan/Sites/gidget3/contrib/friend_of_the_forest.level",
+		"/Users/kwan/Sites/gidget3/lib/db/sql-logWriter.php",
+		"/Users/kwan/Dropbox/Gidget-IdeaGarden/Ambers Level.txt",
+		"/Users/kwan/Sites/gidget3/lib/ideagarden/ideagarden.css",
+		"/Users/kwan/Sites/gidget3/contrib/level-converter.py",
+		"/Users/kwan/osu/personal/cv/irwin_kwan_resume.txt",
+		"/Users/kwan/Sites/gidget3/lib/db/default_tables/gidget.sql",
+		"/Users/kwan/Sites/ideagarden/inheritance-in-javascript.html",
+		"/Users/kwan/osu/personal/cv/IrwinKwanCurriculumVitae.html",
+		"/Users/kwan/Dropbox/blogging/A Brief Introduction to Sublime Text"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"",
+			"IrwinKwanCurriculumVitae.html",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"he assumes that adding \"transport(Gidget,battery)\" would generate working code for transporting gidget to the battery",
+			"he assumes that \"/dog/:transport(Gidget,battery)\" would generate working code for transporting gidget to the battery",
+			"he assumes that \"/dog/:transport(Gidget,battery)\" would generate working code for transporting gidget to the battery ",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\" would generate working code for transporting",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\" would generate working code for tran",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\" would",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\" w",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\"",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\"ery",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\" would generate working code for trasporting gidget to the battery",
+			"he assumes that the code \"/dog/ transport(gidget,(9,1))\" would generate working code for trasporting gidget to the batery",
+			"he assumes that adding \"/dog/",
+			"he assumes that adding \"/dog",
+			"to first /goop/s",
+			"3,4",
+			"3,",
+			"3,4",
+			"to first /kitten/s",
+			"using first /goop/s",
+			"first /goop/s",
+			" object reference : not using slashes around obj reference",
+			"he assumes that adding \"/dog/:transport(Gidget,battery)\" would generate working code for transporting gidget to the battery",
+			"not using slashes around obj",
+			"obj",
+			"function : wrong type \"(9,1)\" for second arg",
+			"function : wrong type \"(9, 1)\"",
+			"function : wrong type \"(9,1)\" for second arg",
+			"object reference : not using slashes around object reference",
+			"civilization",
+			"message",
+			"flatten_",
+			"flaten_",
+			"\\t- ",
+			"_______________________________________________________________________________________________________",
+			"new Server",
+			"new Db",
+			"</span>\n                 <span \nclass=\"cmssi-9\">",
+			"<span class=\"cmr-9\">",
+			"</span>\n                 <span \nclass=\"cmti-9\">",
+			"</span>\n                 <span \nclass=\"cmr-9\">",
+			"<p class=\"noindent\" >_______________________________________________________________________________________________",
+			"</h3>"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"3",
+			"--- ",
+			"-----------------------------------------------------------------",
+			" ",
+			"",
+			"<hr/></h3>"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 373.0
+	},
+	"project": "ld27.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 273.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
