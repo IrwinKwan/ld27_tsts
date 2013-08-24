@@ -2,9 +2,14 @@
 	"build_systems":
 	[
 		{
-			"name": "Ludum Dare 27",
-			"cmd": ["python", "-u", "ld27.py"],
+			"cmd":
+			[
+				"python",
+				"-u",
+				"ld27.py"
+			],
 			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Ludum Dare 27",
 			"selector": "source.python"
 		}
 	],
@@ -13,6 +18,10 @@
 		{
 			"follow_symlinks": true,
 			"path": "/Users/kwan/Development/ld27"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/kwan/Development/painterscat"
 		}
 	]
 }
