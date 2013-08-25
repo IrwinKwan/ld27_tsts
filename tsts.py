@@ -84,6 +84,7 @@ def load_images():
 
     (Bullet.fastimage, Bullet.fastrect) = Asset.load_one_alpha_image("fastbullet.png", Color("white"))
     (Bullet.strongimage, Bullet.strongrect) = Asset.load_one_alpha_image("strongbullet.png", Color("white"))
+    (Bullet.tensecondsimage, Bullet.tensecondsrect) = Asset.load_one_alpha_image("tenseconds.png", Color("white"))
 
     Player.images = [0, 0]
     Player.images[0], r = Asset.load_one_alpha_image("player01.png", -1)
@@ -299,36 +300,7 @@ def main(winstyle = 0):
     sound['fast'] = Asset.load_sound("hihat loop.wav")
     sound['strong'] = Asset.load_sound("OpenHH 909.wav")
 
-    enemies = pygame.sprite.Group()
-    bullets = pygame.sprite.Group()
-
-    all = pygame.sprite.LayeredUpdates()
-    Point.containers = all
-    Player.containers = all
-    Crosshairs.containers = all
-    Bullet.containers = bullets, all
-    Enemy.containers = enemies, all
-    Score.containers = all
-
-    
-    crosshairs = Crosshairs()
-
-    cooldown = {}
-    last_shot = {}
-    cooldown['fast'] = 0
-    last_shot['fast'] = 0
-    cooldown['strong'] = 0
-    last_shot['strong'] = 0
-    cooldown['respawn'] = 0
-    last_shot['respawn'] = 0
-
-    shot_down = 0
-    last_respawn = 0
-
     shot_mode = "fast"
-
-    if pygame.font:
-        all.add(Score())
 
     Asset.play_music("title_theme.ogg")
     title_screen(background)
@@ -410,10 +382,38 @@ def main(winstyle = 0):
         prev_mouse_position = pygame.mouse.get_pos()
         going = True
 
-        player = Player()
 
         GameState.enemies_spawned = 0
         GameState.score = 0
+        cooldown = {}
+        last_shot = {}
+        cooldown['fast'] = 0
+        last_shot['fast'] = 0
+        cooldown['strong'] = 0
+        last_shot['strong'] = 0
+        cooldown['tenseconds'] = 0
+        last_shot['tenseconds'] = 0
+        cooldown['respawn'] = 0
+        last_shot['respawn'] = 0
+
+        shot_down = 0
+        last_respawn = 0
+
+        enemies = pygame.sprite.Group()
+        bullets = pygame.sprite.Group()
+
+        all = pygame.sprite.LayeredUpdates()
+        Point.containers = all
+        Player.containers = all
+        Crosshairs.containers = all
+        Bullet.containers = bullets, all
+        Enemy.containers = enemies, all
+        Score.containers = all
+        if pygame.font:
+            all.add(Score())
+
+        crosshairs = Crosshairs()
+        player = Player()
 
         game_background(background)
         screen.blit(background, (0,0))
@@ -449,28 +449,46 @@ def main(winstyle = 0):
                 shot_mode = "fast"
             elif keystate[K_2]:
                 shot_mode = "strong"
+            elif keystate[K_3]:
+                shot_mode = "tenseconds"
 
             if keystate[K_SPACE] or keystate[K_LSHIFT]:
                 if shot_mode == "fast":
-                    if Bullet.strong - cooldown['fast'] <= 0:
+                    if Bullet.fast - cooldown['fast'] <= 0:
                         cooldown['fast'] = 0
                         last_shot['fast'] = ticks_at_start
-                        Bullet(player.position, pygame.mouse.get_pos(), 0.1, "fast")
-                        Bullet(player.position, pygame.mouse.get_pos(), 0.1, "fast")
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.1, shot_mode)
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.1, shot_mode)
                         random.choice(fast_sounds).play()
 
                 if shot_mode == "strong":
                     if Bullet.strong - cooldown['strong'] <= 0:
                         cooldown['strong'] = 0
                         last_shot['strong'] = ticks_at_start
-                        Bullet(player.position, pygame.mouse.get_pos(), 0.05, "strong")
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.05, shot_mode)
                         random.choice(strong_sounds).play()
 
-                # close, mover, chaser, fastie
+                if shot_mode == "tenseconds":
+                    if Bullet.tenseconds - cooldown['tenseconds'] <= 0:
+                        cooldown['tenseconds'] = 0
+                        last_shot['tenseconds'] = ticks_at_start
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.01, shot_mode)
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.01, shot_mode)
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.01, shot_mode)
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.01, shot_mode)
+                        random.choice(strong_sounds).play()
 
-            if len(enemies) <= 0 or Enemy.respawn - cooldown['respawn'] <= 0 \
+                if Bullet.tenseconds - cooldown['tenseconds'] <= 0:
+                    # Message: the ten-second shot is ready!
+                    pass
+
+            for b in bullets:
+                b.track(enemies)
+
+            # close, mover, chaser, fastie
+            if (len(enemies) <= 0 or Enemy.respawn - cooldown['respawn'] <= 0) \
                 and len(enemies) < Enemy.limit \
-                and GameState.enemies_spawned > 200:
+                and GameState.enemies_spawned < 200:
                 if GameState.score < 10:
                     cooldown['respawn'] = 0
                     Enemy(player.position, "blob", False, False, False, False)
@@ -486,19 +504,21 @@ def main(winstyle = 0):
 
                 last_shot['respawn'] = ticks_at_start
 
-            if len(enemies) <= 0 and GameState.enemies_spawned <= 200:
+            if len(enemies) <= 0 and GameState.enemies_spawned >= 200:
                 going = False
                 win = True
 
 
             cooldown['strong'] = ticks_at_start - last_shot['strong']
             cooldown['fast'] = ticks_at_start - last_shot['fast']
+            cooldown['tenseconds'] = ticks_at_start - last_shot['tenseconds']
             cooldown['respawn'] = ticks_at_start - last_shot['respawn']
 
             for b, enemy_list in pygame.sprite.groupcollide(bullets, enemies, True, True).items():
                 for e in enemy_list:
                     GameState.score += e.value
                     random.choice(kill_sounds).play()
+                    # print "Spawned: %d" % GameState.enemies_spawned
 
             for e in enemies:
                 e.move(player.position)

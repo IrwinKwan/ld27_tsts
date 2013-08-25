@@ -27,6 +27,46 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "tsts.py",
+			"settings":
+			{
+				"buffer_size": 19750,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "constant.py",
+			"settings":
+			{
+				"buffer_size": 330,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "characters.py",
+			"settings":
+			{
+				"buffer_size": 9001,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "ld27.sublime-project",
+			"settings":
+			{
+				"buffer_size": 399,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/kwan/Development/painterscat/painterscat.py",
+			"settings":
+			{
+				"buffer_size": 16179,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -67,6 +107,8 @@
 	},
 	"file_history":
 	[
+		"/Users/kwan/Development/painterscat/painterscat-win32.spec",
+		"/Users/kwan/Development/ld27_tsts/ld27.sublime-project",
 		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluoritelogreader/views/LogReaderView.java",
 		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluorite/visitors/CurrentMethodsVisitor.java",
 		"/Users/kwan/Documents/Eclipse/FluoriteLogReader/src/fluoritelogreader/adapters/LogRunnerSelectionAdapter.java",
@@ -103,6 +145,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"limit",
+			"Player",
 			"he assumes that adding \"transport(Gidget,battery)\" would generate working code for transporting gidget to the battery",
 			"he assumes that \"/dog/:transport(Gidget,battery)\" would generate working code for transporting gidget to the battery",
 			"he assumes that \"/dog/:transport(Gidget,battery)\" would generate working code for transporting gidget to the battery ",
@@ -168,8 +212,151 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "tsts.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19750,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								18420,
+								18420
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7520.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "constant.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 330,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "characters.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9001,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7009,
+								7009
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3573.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "ld27.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 399,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								75,
+								75
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Users/kwan/Development/painterscat/painterscat.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16179,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8776,
+								8776
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4900.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],

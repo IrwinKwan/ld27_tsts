@@ -242,18 +242,23 @@ class Enemy(pygame.sprite.Sprite):
 class Bullet(pygame.sprite.Sprite):
 
     strong = 240
-    fast = 240
+    fast = 60
+    tenseconds = 6000
     spread = 6000
 
-    def __init__(self, origin, direction, speed, type):
+    def __init__(self, origin, direction, speed, btype):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
-        if type == "fast":
+        self.btype = btype
+        if btype == "fast":
             self.image = Bullet.fastimage
             self.rect = self.image.get_rect()
-        elif type == "strong":
+        elif btype == "strong":
             self.image = Bullet.strongimage
             self.rect = Bullet.strongrect
+        elif btype == "tenseconds":
+            self.image = Bullet.tensecondsimage
+            self.rect = Bullet.tensecondsrect
         else:
             self.image = Bullet.fastimage
             self.rect = Bullet.fastrect
@@ -263,6 +268,7 @@ class Bullet(pygame.sprite.Sprite):
         self.origin = PVector(origin[0], origin[1])
         self.aim = PVector(direction[0], direction[1])
 
+        self.speed = speed
         self.direction = self.aim - self.origin
         self.direction.mag = speed
 
@@ -275,10 +281,28 @@ class Bullet(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (self.pos[0], self.pos[1])
 
+    def track(self, enemies):
+        if not self.btype == "tenseconds":
+            return
+
+        closest = None
+        for e in enemies:
+            vector = PVector(e.pos[0], e.pos[1]) - PVector(self.pos[0], self.pos[1])
+            if closest == None or vector.mag < closest.mag:
+                closest = vector
+
+        self.direction = closest
+
+        if self.direction == None:
+            mpos = pygame.mouse.get_pos()
+            self.direction = PVector(mpos[0], mpos[1]) - self.origin
+
+        self.direction.mag = self.speed
+
+
     def update(self):
         self.pos[0] = self.pos[0] + self.direction.x * self.direction.mag
         self.pos[1] = self.pos[1] + self.direction.y * self.direction.mag
-        # print self.pos[0], self.pos[1]
         self.rect.center = (self.pos[0], self.pos[1])
 
         if Bounds.outside(self.pos[0], self.pos[1]):
