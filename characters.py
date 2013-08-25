@@ -60,7 +60,7 @@ class Point(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
 
-    animation_cycle = 30
+    animation_cycle = 120
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
@@ -122,7 +122,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.center = (self.pos_x, self.pos_y)
         self.rect = self.rect.clamp(Constant.SCREEN_RECT)
-        self.image = self.images[self.frame//self.animation_cycle % 2 + 2]
+        self.image = self.images[self.frame//self.animation_cycle % 2]
         self.image = pygame.transform.rotate(self.image, self.angle)
         # print self.angle
 
@@ -161,6 +161,8 @@ class Enemy(pygame.sprite.Sprite):
             self.images = Enemy.image_data['blob']
         elif visual == "butterfly":
             self.images = Enemy.image_data['butterfly']
+        elif visual == "octopus":
+            self.images = Enemy.image_data['octopus']
         else:
             self.images = Enemy.image_data['blob']
 

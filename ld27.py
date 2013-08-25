@@ -77,12 +77,16 @@ def load_images():
     Enemy.image_data['blob'][0], r = Asset.load_one_alpha_image("blob01.png", -1)
     Enemy.image_data['blob'][1], r = Asset.load_one_alpha_image("blob02.png", -1)
 
+    Enemy.image_data['octopus'] = [0,0]
+    Enemy.image_data['octopus'][0], r = Asset.load_one_alpha_image("octopus01.png", -1)
+    Enemy.image_data['octopus'][1], r = Asset.load_one_alpha_image("octopus02.png", -1)
+
     (Bullet.fastimage, Bullet.fastrect) = Asset.load_one_alpha_image("fastbullet.png", Color("white"))
     (Bullet.strongimage, Bullet.strongrect) = Asset.load_one_alpha_image("strongbullet.png", Color("white"))
 
-    Player.images = Asset.load_image("player.png", [(0,0,32,32),(32,0,32,32)], -1)
-    Player.images.append(pygame.transform.flip(Player.images[0], 1, 0))
-    Player.images.append(pygame.transform.flip(Player.images[1], 1, 0))
+    Player.images = [0, 0]
+    Player.images[0], r = Asset.load_one_alpha_image("player01.png", -1)
+    Player.images[1], r = Asset.load_one_alpha_image("player02.png", -1)
 
 
 def load_kill_sounds():
@@ -109,7 +113,7 @@ def load_fast_sounds():
 
 
 def title_screen(background):
-    titleMsg, titleRect = Asset.load_one_alpha_image("title.png", Color("white"))
+    titleMsg, titleRect = Asset.load_one_alpha_image("title.jpg", Color("white"))
     titleRect = titleMsg.get_rect(midtop=(Constant.SCREEN_RECT.width/2, 0))
     background.blit(titleMsg, titleRect)
     return background
@@ -169,6 +173,7 @@ def story_page_advance(background, screen, storyfile, dialog_list):
         fontfile = Asset.resource_path(os.path.join("assets", "freesansbold.ttf"))
         font = pygame.font.Font(fontfile, 16)
 
+    delay = 1000
     for talking in dialog_list:
         if pygame.font:
             dialog = pygame.draw.rect(background, Color("white"), (320 - 120, 456, 240, 25), 0)
@@ -179,17 +184,69 @@ def story_page_advance(background, screen, storyfile, dialog_list):
         screen.blit(background, (0,0))
         pygame.display.flip()
 
-        pygame.time.delay(1000)
+        pygame.time.delay(delay)
 
         event = pygame.event.poll()
         if event.type == QUIT:
             pygame.quit()
             return
-        elif event.type == KEYDOWN and event.key == K_ESCAPE:
-            break
+        elif (event.type == KEYDOWN and event.key == K_ESCAPE) \
+            or event.type == KEYDOWN and event.key == K_SPACE:
+            delay = 50
 
     # pygame.mixer.music.fadeout(1000)
     pygame.event.clear()
+
+def gameover_page(background, screen, storyfile, dialog_list):
+    m, r = Asset.load_one_alpha_image(storyfile, -1)
+    r = m.get_rect(midtop=(Constant.SCREEN_RECT.width/2, 0))
+    background.blit(m, r)
+
+    fontfile = None
+    font = None
+    if pygame.font:
+        fontfile = Asset.resource_path(os.path.join("assets", "freesansbold.ttf"))
+        font = pygame.font.Font(fontfile, 16)
+
+    play_again = True
+    for talking in dialog_list:
+        if pygame.font:
+            if type(talking) == str:
+                dialog = pygame.draw.rect(background, Color("white"), (40, 400, 560, 60), 0)
+                text = font.render(talking, 1, Color('black'))
+                textpos = text.get_rect(topleft=(45, 405))
+                background.blit(text, textpos)
+            elif type(talking) == list:
+                dialog = pygame.draw.rect(background, Color("white"), (40, 400, 560, 60), 0)
+                text = font.render(talking[0], 1, Color('black'))
+                textpos = text.get_rect(topleft=(45, 405))
+                background.blit(text, textpos)
+
+                # dialog = pygame.draw.rect(background, Color("white"), (40, 400, 560, 60), 0)
+                text = font.render(talking[1], 1, Color('black'))
+                textpos = text.get_rect(topleft=(45, 423))
+                background.blit(text, textpos)
+
+        screen.blit(background, (0,0))
+        pygame.display.flip()
+
+        waiting = True
+        while waiting:
+            event = pygame.event.wait()
+            if event.type == QUIT:
+                pygame.quit()
+                return
+            elif event.type == MOUSEBUTTONDOWN \
+                or (event.type == KEYDOWN and event.key == K_SPACE) \
+                or (event.type == KEYDOWN and event.key == K_y):
+                play_again = True
+                waiting = False
+            elif (event.type == KEYDOWN and event.key == K_ESCAPE) \
+                or (event.type == KEYDOWN and event.key == K_n):
+                play_again = False
+                waiting = False
+
+    return play_again
 
 def game_background(background):
     m, r = Asset.load_one_alpha_image("background.jpg", Color("white"))
@@ -233,6 +290,7 @@ def main(winstyle = 0):
     kill_sounds = load_kill_sounds()
     strong_sounds = load_strong_sounds()
     fast_sounds = load_fast_sounds()
+    explode = Asset.load_sound("explode.wav")
 
     pygame.mixer.init(44100, -16, 2, 1024)
 
@@ -251,7 +309,7 @@ def main(winstyle = 0):
     Enemy.containers = enemies, all
     Score.containers = all
 
-    player = Player()
+    
     crosshairs = Crosshairs()
 
     cooldown = {}
@@ -271,6 +329,7 @@ def main(winstyle = 0):
     if pygame.font:
         all.add(Score())
 
+    Asset.play_music("title_theme.ogg")
     title_screen(background)
     screen.blit(background, (0,0))
     pygame.display.flip()
@@ -293,15 +352,17 @@ def main(winstyle = 0):
             pygame.quit()
             return
 
-    # pygame.mixer.music.fadeout(1000)
+    pygame.mixer.music.fadeout(1000)
     pygame.event.clear()
     keystate = pygame.key.get_pressed()
     pygame.event.wait()
 
 
     # ========== story mode
-    story = False
+    story = True
     if (story):
+        Asset.play_music("story_theme.ogg")
+
         story_page(background, screen, "_celine.jpg", [
             ["Lieutenant Celine Bodreaux: Commander! We've got a reading from", "our outer satelite permimeter."]])
 
@@ -319,23 +380,27 @@ def main(winstyle = 0):
             ["Commander Jeffrey Rotan: You have TEN SECONDS to get to the ship!", "It's time for you to save the world."],
             "Captain Yui: I'm on it, sir!"])
 
+        pygame.mixer.music.fadeout(1000)
+
         story_page(background, screen, "_yui.jpg",
             ["Prepare the launch!"])
 
-        story_page_advance(background, screen, "rocket.jpg", ["T minus", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1"])
+        countdown = Asset.load_sound("countdown.ogg")
+        countdown.play()
+        story_page_advance(background, screen, "rocket.jpg", ["T-minus 10", "9", "8", "7", "6", "5", "4", "3", "2", "1"])
+        pygame.mixer.stop()
 
+        liftoff = Asset.load_sound("liftoff.wav")
+        liftoff.play()
         story_page_advance(background, screen, "launch.jpg", ["LIFT OFF!",
             "Defend our world, Captain!"])
+        pygame.mixer.stop()
 
     # ============ game mode
 
-    game_background(background)
-    screen.blit(background, (0,0))
-    pygame.display.flip()
-
-    Asset.play_music("LD27_120.wav")
 
     playing = True
+    win = False
     while playing:
 
         clock = pygame.time.Clock()
@@ -343,6 +408,17 @@ def main(winstyle = 0):
 
         prev_mouse_position = pygame.mouse.get_pos()
         going = True
+
+        player = Player()
+
+        GameState.enemies_spawned = 0
+        GameState.score = 0
+
+        game_background(background)
+        screen.blit(background, (0,0))
+        pygame.display.flip()
+
+        Asset.play_music("main_theme.ogg")
 
         while player.alive() and going == True:
             ticks_at_start = pygame.time.get_ticks()
@@ -373,12 +449,13 @@ def main(winstyle = 0):
             elif keystate[K_2]:
                 shot_mode = "strong"
 
-            if keystate[K_SPACE]:
+            if keystate[K_SPACE] or keystate[K_LSHIFT]:
                 if shot_mode == "fast":
                     if Bullet.strong - cooldown['fast'] <= 0:
                         cooldown['fast'] = 0
                         last_shot['fast'] = ticks_at_start
-                        Bullet(player.position, pygame.mouse.get_pos(), 0.05, "fast")
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.1, "fast")
+                        Bullet(player.position, pygame.mouse.get_pos(), 0.1, "fast")
                         random.choice(fast_sounds).play()
 
                 if shot_mode == "strong":
@@ -390,17 +467,28 @@ def main(winstyle = 0):
 
                 # close, mover, chaser, fastie
 
-            if len(enemies) <= 0 or Enemy.respawn - cooldown['respawn'] <= 0 and len(enemies) < Enemy.limit:
+            if len(enemies) <= 0 or Enemy.respawn - cooldown['respawn'] <= 0 \
+                and len(enemies) < Enemy.limit \
+                and GameState.enemies_spawned > 200:
                 if GameState.score < 10:
+                    cooldown['respawn'] = 0
                     Enemy(player.position, "blob", False, False, False, False)
                 elif GameState.score < 30:
+                    cooldown['respawn'] = 0
                     Enemy(player.position, "butterfly", False, True, False, False)
-                    Enemy(player.position, "octopus", True, True, False, False)
+                    Enemy(player.position, "blob", True, True, False, False)
                 else:
-                    Enemy(player.position, "bird", False, True, bool(random.getrandbits(1)), bool(random.getrandbits(1)))
+                    cooldown['respawn'] = 0
+                    Enemy(player.position, "butterfly", False, True, bool(random.getrandbits(1)), bool(random.getrandbits(1)))
                     Enemy(player.position, "octopus", True, True, bool(random.getrandbits(1)), bool(random.getrandbits(1)))
+                    Enemy(player.position, "blob", True, True, bool(random.getrandbits(1)), bool(random.getrandbits(1)))
 
                 last_shot['respawn'] = ticks_at_start
+
+            if len(enemies) <= 0 and GameState.enemies_spawned <= 200:
+                going = False
+                win = True
+
 
             cooldown['strong'] = ticks_at_start - last_shot['strong']
             cooldown['fast'] = ticks_at_start - last_shot['fast']
@@ -414,19 +502,38 @@ def main(winstyle = 0):
             for e in enemies:
                 e.move(player.position)
 
+            for enemy_list in pygame.sprite.spritecollide(player, enemies, False):
+                explode.play()
+                player.kill()
+
             dirty = all.draw(screen)
             pygame.display.update(dirty)
 
             clock.tick(60)
             prev_mouse_position = pygame.mouse.get_pos()
 
-        print "Replay?"
 
+        # Game Loop Over, so retry or quit
+        pygame.mixer.music.fadeout(200)
+        pygame.event.clear()
+        going = gameover_page(background, screen, "background.jpg", ["Play again? y/n"])
+        if going == False:
+            playing = False
+
+    if win:
+        Asset.play_music("victory_theme.ogg")
+        story_page(background, screen, "commander_yui.jpg", [
+                "Captain Yui: I won!",
+                ["Commander Jeffrey Rotan: Captain! You did it! Great job",
+                "out there. No one else could have done it."],
+                ["Commander Jeffrey Rotan: We kept count. You managed",
+                "to rake up %d points with that ship. That's amazing!" % GameState.score]])
+
+    screen.blit(background, (0,0))
     pygame.display.flip()
 
     if pygame.mixer:
         pygame.mixer.music.fadeout(2000)
-        
     pygame.quit()
 
 if __name__ == '__main__':

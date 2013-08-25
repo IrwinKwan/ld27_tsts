@@ -8,3 +8,9 @@ __2013-08-23	20:07:44__	I say that this'll be a 3-hour game. Based on my progres
 __2013-08-23	20:58:32__	Probably the best thing I could do to make my Ludum Dare faster is to commit to memory basic 2D geometry and trigonometry so I can calculate trajectories and directions of bullets and other similar items.
 
 __2013-08-23	23:02:30__	A lot of the time spent today? Re-learning how to do things like sprites, collisions, layers, etc... time for bed now.
+
+__2013-08-24	07:53:47__	Resuming tomorrow morning. I'm going to try to spend the next few hours on making the game feel like a game, and on adding an audio experience to it, and then I'll have to be done with it. The audio experience will be something new to me, so from a development standpoint, and a game design standpoint, I hope that it'll be unique and interesting and add something to this otherwise uninteresting game.
+
+I was going to base the game on 10 second loops, but unfortunately there's no way to easily fit a 4-on-the-floor loop into 10 seconds in a way that isn't super fast or super slow, so we'll see what I'm going to do. Maybe 120 bpm is the right way to go.
+
+__2013-08-24	08:49:22__	Okay, pygame's resolution for clock ticks isn't good enough for audio synchronization, which means that this is probably going to be a really boring, run-of-the-mill shooting game.
