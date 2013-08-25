@@ -13,3 +13,7 @@ class V:
     cooldown['fast'] = 10
     cooldown['spread'] = 1000
     cooldown['strong'] = 500
+
+class GameState:
+	enemies_spawned = 0
+	score = 0

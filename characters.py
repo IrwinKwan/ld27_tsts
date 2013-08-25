@@ -2,13 +2,15 @@
 
 """A character"""
 
+import math
+
 import pygame
 from pygame.locals import *
 from pygame.compat import geterror
 
 import random
 
-from constant import Constant
+from constant import *
 from pvector import PVector
 
 class Bounds:
@@ -57,6 +59,9 @@ class Point(pygame.sprite.Sprite):
         self.rect.center = position
 
 class Player(pygame.sprite.Sprite):
+
+    animation_cycle = 30
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
@@ -65,16 +70,19 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
-        self.pos_x = Constant.SCREEN_RECT.x/2
-        self.pos_y = Constant.SCREEN_RECT.y/2
+        self.pos_x = Constant.SCREEN_WIDTH/2
+        self.pos_y = Constant.SCREEN_HEIGHT/2
 
         self.speed = 5
 
-    def pos(self, position_change):
-        self.pos_x += position_change[0]
-        self.pos_y += position_change[1]
-        self.rect.center = (self.pos_x, self.pos_y)
-        self.rect = self.rect.clamp(Constant.SCREEN_RECT)
+        self.image = self.images[0]
+        self.rect = self.images[0].get_rect()
+        self.rect.move_ip(Constant.SCREEN_RECT.width/2, Constant.SCREEN_RECT.bottom)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.frame = 0
+
+        self.angle = 0
+        self.turn()
 
     @property
     def position(self):
@@ -91,15 +99,33 @@ class Player(pygame.sprite.Sprite):
         elif direction == "right":
             self.pos_x += self.speed
 
+        # if Bounds.top_out(self.pos_x):
+        #     self.pos_x = 8
+
+        # if Bounds.bottom_out(self.pos_y):
+        #     self.pos_x = Constant.SCREEN_HEIGHT - 8
+
+        # if Bounds.left_out(self.pos_y):
+        #     self.pos_y = 8
+
+        # if Bounds.right_out(self.pos_y):
+        #     self.pos_y = Constant.SCREEN_WIDTH - 8
+
+    def turn(self):
+        mouse_pos = pygame.mouse.get_pos()
+        angle = math.atan2(mouse_pos[0] - self.pos_x,  mouse_pos[1] - self.pos_y) + math.pi
+        self.angle = angle * 57.2957795 # Radians to degrees
+
+    def update(self):
+        self.turn()
+        self.frame = pygame.time.get_ticks()
+
         self.rect.center = (self.pos_x, self.pos_y)
-
-        if Bounds.top_out(self.pos_x) or Bounds.bottom_out(self.pos_y):
-            self.pos_x -= self.pos_x
-
-        if Bounds.left_out(self.pos_y) or Bounds.right_out(self.pos_y):
-            self.pos_y -=  self.pos_y
-
         self.rect = self.rect.clamp(Constant.SCREEN_RECT)
+        self.image = self.images[self.frame//self.animation_cycle % 2 + 2]
+        self.image = pygame.transform.rotate(self.image, self.angle)
+        # print self.angle
+
 
 class Crosshairs(pygame.sprite.Sprite):
     def __init__(self):
@@ -113,51 +139,108 @@ class Crosshairs(pygame.sprite.Sprite):
         self.rect.center = pygame.mouse.get_pos()
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, player_pos, close, mover, chaser, fastie):
+    respawn = 600
+    limit = 50
+    animation_cycle = 120
+    image_data = {}
+    images = [0,0]
+    rects = {}
+
+    def __init__(self, player_pos, visual, close, mover, chaser, fastie):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
         self.pos = [0, 0]
         if close:
-            self.pos[0] = random_direction() * random.randint(70, 100)
-            self.pos[1] = random_direction() * random.randint(70, 100)
+            self.pos[0] = player_pos[0] * random_direction() + random.randint(70, 100)
+            self.pos[1] = player_pos[1] * random_direction() + random.randint(70, 100)
         else:
-            self.pos[0] = random_direction() * random.randint(300, 500)
-            self.pos[1] = random_direction() * random.randint(300, 500)
+            self.pos[0] = player_pos[0] * random_direction() + random.randint(300, 500)
+            self.pos[1] = player_pos[1] * random_direction() + random.randint(300, 500)
 
-
-        if fastie:
-            self.speed = random.randint(5,10)
+        if visual == "blob":
+            self.images = Enemy.image_data['blob']
+        elif visual == "butterfly":
+            self.images = Enemy.image_data['butterfly']
         else:
-            self.speed = 2
+            self.images = Enemy.image_data['blob']
 
-        self.image = pygame.Surface([20, 20])
-        pygame.draw.circle(self.image, Color("red"), (10, 10), 10, 0)
+        self.image = self.images[0]
+
+        # if visual == "blob":
+        #     self.image = Enemy.images['blob']
+        # elif visual == "butterfly":
+        #     self.image = Enemy.images['butterfly']
+        # elif visual == "octopus":
+        #     self.image = Enemy.images['octopus']
+        # else:
+        #     self.image = Enemy.images['blob']
+
         self.rect = self.image.get_rect()
+        self.rect.move_ip(Constant.SCREEN_RECT.width/2, Constant.SCREEN_RECT.bottom)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.frame = 0
 
+        # self.image = pygame.Surface([20, 20])
+        # pygame.draw.circle(self.image, Color("red"), (10, 10), 10, 0)
+
+        self.rect.center = (self.pos[0], self.pos[1])
+
+        self.close = close
+        self.mover = mover
         self.chaser = chaser
+        self.fastie = fastie
+        if fastie:
+            self.speed = random.randint(2,4)
+        else:
+            self.speed = 1
+
         self.direction = None
+        GameState.enemies_spawned += 1
 
     def move(self, player_pos):
-        self.direction = None
+
+        mouse_pos = pygame.mouse.get_pos()
+        angle = math.atan2(player_pos[0] - self.pos[0],  player_pos[1] - self.pos[1]) + math.pi
+        self.angle = angle * 57.2957795 # Radians to degrees
+
         if Bounds.outside(self.pos[0], self.pos[1]) or self.chaser:
-            # if out of bounds, move toward the player
-            self.direction = PVector(player_pos[0], player_pos[1]) - PVector(self.pos_x, self.pos_y)
-            self.direction.mag = self.speed
+            self.direction = PVector(player_pos[0], player_pos[1]) - PVector(self.pos[0], self.pos[1])
         else:
-            # random direction
-            self.direction = PVector(player_pos[0], player_pos[1]) - PVector(random.randint(0,640), random.randint(0,480))
-            self.direction.mag = self.speed
+            self.direction = PVector(random.randint(0,640), random.randint(0,480)) - PVector(self.pos[0], self.pos[1])
+
+        self.direction.normalize()
+        self.direction.mag = self.speed
 
         self.pos[0] = self.pos[0] + self.direction.x * self.direction.mag
         self.pos[1] = self.pos[1] + self.direction.y * self.direction.mag
 
     def update(self):
+        self.frame = pygame.time.get_ticks()
         self.rect.center = (self.pos[0], self.pos[1])
+        self.image = self.images[self.frame//self.animation_cycle % 2]
+        self.image = pygame.transform.rotate(self.image, self.angle)
+
+    @property
+    def value(self):
+        value = 1
+        if self.close:
+            value += 1
+
+        if self.mover:
+            value += 2
+
+        if self.fastie:
+            value *= 2
+
+        if self.chaser:
+            value += 3
+
+        return value
 
 class Bullet(pygame.sprite.Sprite):
 
-    strong = 100
-    fast = 10
+    strong = 240
+    fast = 240
     spread = 6000
 
     def __init__(self, origin, direction, speed, type):
