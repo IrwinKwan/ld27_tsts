@@ -1,6 +1,8 @@
 Ludum Dare 27 Log
 =================
 
+by Arcana
+
 __2013-08-23	20:07:02__	I don't have a lot of time this weekend because I'm really busy, so I tell people I'm going to spend 3 hours on Ludum Dare 27. I will probably end up using more time, but I definitely can't spend the entire 48 hours building the game so I'll likely get something up and running and submit it.
 
 __2013-08-23	20:07:44__	I say that this'll be a 3-hour game. Based on my progress on the first hour, which consists of remembering again how PyGame works, not a lot will be accomplished in 3 hours.
@@ -14,3 +16,5 @@ __2013-08-24	07:53:47__	Resuming tomorrow morning. I'm going to try to spend the
 I was going to base the game on 10 second loops, but unfortunately there's no way to easily fit a 4-on-the-floor loop into 10 seconds in a way that isn't super fast or super slow, so we'll see what I'm going to do. Maybe 120 bpm is the right way to go.
 
 __2013-08-24	08:49:22__	Okay, pygame's resolution for clock ticks isn't good enough for audio synchronization, which means that this is probably going to be a really boring, run-of-the-mill shooting game.
+
+__2013-08-24	22:39:52__	I spent the majority of today working on this... so much for "Three hours". However, a lot of that time was spent making assets... so much time. I can't work on this tomorrow so I'm going to compile it now, and hopefully do the Windows version tomorrow night.
