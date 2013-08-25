@@ -4,7 +4,7 @@
 Ludum Dare 27
 A 48 hour compo starting April 26, 2013.
 
-The theme? Dunno yet.
+The theme? 10 seconds
 
 Game written by Arcana (c 2013).
 
@@ -27,7 +27,8 @@ from characters import *
 class Score(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.font = pygame.font.Font(None, 20)
+        fontfile = Asset.resource_path(os.path.join("assets", "freesansbold.ttf"))
+        self.font = pygame.font.Font(fontfile, 20)
         self.color = Color('white')
         self.lastscore = -1
         self.update()
